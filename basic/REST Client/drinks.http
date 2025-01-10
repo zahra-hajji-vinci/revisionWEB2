@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3000
+
+### Read all drinks
+GET {{baseUrl}}/drinks
+
+### Read all drinks with a maximum price
+GET {{baseUrl}}/drinks/?budget-max=2
+
+
+### Read all drinks with a maximum volume
+GET {{baseUrl}}/drinks/?volume-max=0.30
+
+
+### Read all drinks with a maximum id
+GET {{baseUrl}}/drinks/?id-max=2
+
+

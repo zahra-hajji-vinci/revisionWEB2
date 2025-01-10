@@ -46,8 +46,54 @@ const drinks: Drink[] = [
 
 const router = Router();
 
-router.get("/", (_req, res) => {
-  return res.json(drinks);
+router.get("/", (req, res) => {
+  console.log("Query params:", req.query); // Affiche les paramètres de la requête
+  const budgetMax = req.query["budget-max"] ? Number(req.query["budget-max"]) : null;
+  const volumeMax = req.query["volume-max"] ? Number(req.query["volume-max"]) : null;
+  const idMax = req.query["id-max"] ? Number(req.query["id-max"]) : null;
+
+  if (budgetMax !== null && isNaN(budgetMax)) {
+    return res.status(400).json({ error: "Invalid budget-max value" });
+  }
+
+  if (volumeMax !== null && isNaN(volumeMax)) {
+    return res.status(400).json({ error: "Invalid volume-max value" });
+  }
+
+  if (idMax !== null && isNaN(idMax)) {
+    return res.status(400).json({ error: "Invalid id-max value" });
+  }
+
+  let filteredDrinks = drinks;
+
+  if (budgetMax !== null) {
+    filteredDrinks = filteredDrinks.filter((drink) => drink.price <= budgetMax);
+  }
+
+  if (volumeMax !== null) {
+    filteredDrinks = filteredDrinks.filter((drink) => drink.volume <= volumeMax);
+  }
+
+  if (idMax !== null) {
+    filteredDrinks = filteredDrinks.filter((drink) => drink.id <= idMax);
+  }
+
+  console.log("Filtered drinks:", filteredDrinks); // Affiche les boissons filtrées
+  return res.json(filteredDrinks);
 });
+
+
+router.get("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const drink = drinks.find((drink) => drink.id === id);
+  if (!drink) {
+    return res.status(404).json({ message: "Drink not found" });
+  }
+  return res.json(drink);
+}
+);    
+
+
+
 
 export default router;
