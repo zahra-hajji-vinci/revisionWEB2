@@ -1,32 +1,13 @@
-import express, { ErrorRequestHandler } from "express";
+import express from "express";
 
-import usersRouter from "./routes/users";
-import pizzaRouter from "./routes/pizzas";
-import drinkRouter from "./routes/drinks";
 
+import filmRouter from "./routes/films";    
 
 const app = express();
 
-//Exemples de ces types de middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.use(express.json()); // Parse requests with JSON payloads
-app.use(express.urlencoded({ extended: false })); // Parse requests with URL-
-      
-//app.use(logger('dev')); // HTTP request logger linked to morgan package// encoded payload 
-//app.use(cookieParser()); // Parse cookie header (req.cookies)
-//app.use(express.static(path.join(__dirname, 'public'))); // Serve static assets
-
-//Router
-app.use("/users", usersRouter);
-app.use("/pizzas", pizzaRouter);
-app.use("/drinks",drinkRouter);
-
-const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-    console.error(err.stack);
-    return res.status(500).send("Something broke!");
-  };
-  
-app.use(errorHandler);
-  
+app.use("/films",filmRouter); 
 
 export default app;
