@@ -7,14 +7,10 @@ import drinkRouter from "./routes/drinks";
 
 const app = express();
 
-//Exemples de ces types de middleware
 
 app.use(express.json()); // Parse requests with JSON payloads
 app.use(express.urlencoded({ extended: false })); // Parse requests with URL-
       
-//app.use(logger('dev')); // HTTP request logger linked to morgan package// encoded payload 
-//app.use(cookieParser()); // Parse cookie header (req.cookies)
-//app.use(express.static(path.join(__dirname, 'public'))); // Serve static assets
 
 //Router
 app.use("/users", usersRouter);
