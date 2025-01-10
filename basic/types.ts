@@ -19,4 +19,8 @@ interface Drink {
   price: number;
 }
 
-export type { Pizza, NewPizza, PizzaToUpdate, Drink };
+//Create a new type NewDrink that is the same as Drink but without the id field
+type NewDrink = Omit<Drink, "id">;
+
+
+export type { Pizza, NewPizza, PizzaToUpdate, Drink, NewDrink };

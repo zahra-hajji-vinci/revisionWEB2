@@ -46,6 +46,8 @@ const drinks: Drink[] = [
 
 const router = Router();
 
+
+//Récupérer toutes les boissons et filtrer par budget, volume et id
 router.get("/", (req, res) => {
   console.log("Query params:", req.query); // Affiche les paramètres de la requête
   const budgetMax = req.query["budget-max"] ? Number(req.query["budget-max"]) : null;
@@ -83,6 +85,7 @@ router.get("/", (req, res) => {
 });
 
 
+//Filtrer les boissons par id
 router.get("/:id", (req, res) => {
   const id = Number(req.params.id);
   const drink = drinks.find((drink) => drink.id === id);
@@ -90,9 +93,28 @@ router.get("/:id", (req, res) => {
     return res.status(404).json({ message: "Drink not found" });
   }
   return res.json(drink);
-}
-);    
+});
 
+//Créer une nouvelle boisson
+router.post("/",(req,res)=>{  
+  const {title,image,volume,price} = req.body;
+  if(!title || !image || !volume || !price){
+    return res.status(400).json({error:"Missing fields"});
+  }
+
+  const nextId = 
+    drinks.reduce((maxId,drink)=>(drink.id>maxId?drink.id:maxId),0)+1;
+  
+    const NewDrink:Drink = {
+    id: nextId,
+    title,
+    image,
+    volume,
+    price
+  };      
+  drinks.push(NewDrink);
+  return res.status(201).json(NewDrink);
+} );
 
 
 
