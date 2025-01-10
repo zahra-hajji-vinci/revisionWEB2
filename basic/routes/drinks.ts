@@ -47,42 +47,26 @@ const drinks: Drink[] = [
 const router = Router();
 
 
-//Récupérer toutes les boissons et filtrer par budget, volume et id
+
+
+// Filtrer les boissons par prix (prix maximum)
 router.get("/", (req, res) => {
-  console.log("Query params:", req.query); // Affiche les paramètres de la requête
-  const budgetMax = req.query["budget-max"] ? Number(req.query["budget-max"]) : null;
-  const volumeMax = req.query["volume-max"] ? Number(req.query["volume-max"]) : null;
-  const idMax = req.query["id-max"] ? Number(req.query["id-max"]) : null;
-
-  if (budgetMax !== null && isNaN(budgetMax)) {
-    return res.status(400).json({ error: "Invalid budget-max value" });
+  if (req.query["max-price"] === undefined) {
+    return res.json(drinks);
   }
 
-  if (volumeMax !== null && isNaN(volumeMax)) {
-    return res.status(400).json({ error: "Invalid volume-max value" });
+  const maxPrice = Number(req.query["max-price"]);
+
+  if (isNaN(maxPrice) || maxPrice <= 0) {
+    return res.sendStatus(400);
   }
 
-  if (idMax !== null && isNaN(idMax)) {
-    return res.status(400).json({ error: "Invalid id-max value" });
-  }
+  const filteredDrinks = drinks.filter((drink) => drink.price <= maxPrice);
 
-  let filteredDrinks = drinks;
-
-  if (budgetMax !== null) {
-    filteredDrinks = filteredDrinks.filter((drink) => drink.price <= budgetMax);
-  }
-
-  if (volumeMax !== null) {
-    filteredDrinks = filteredDrinks.filter((drink) => drink.volume <= volumeMax);
-  }
-
-  if (idMax !== null) {
-    filteredDrinks = filteredDrinks.filter((drink) => drink.id <= idMax);
-  }
-
-  console.log("Filtered drinks:", filteredDrinks); // Affiche les boissons filtrées
-  return res.json(filteredDrinks);
+  return res.send(filteredDrinks);
 });
+
+
 
 
 //Filtrer les boissons par id
@@ -110,6 +94,7 @@ router.post("/", (req, res) => {
     typeof body.volume !== "number" ||
     typeof body.price !== "number" ||
     !body.title.trim() ||
+    !body.image.trim() ||
      // Trim supprime les espaces blancs des deux côtés d'une chaîne
     body.volume <= 0 ||
     body.price <= 0

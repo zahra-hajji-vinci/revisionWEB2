@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { Film } from "../types";
+import { Film, NewFilm} from "../types";
 
 const router = Router();
 
-const defaultFilms: Film[] = [
+const films: Film[] = [
     {
       id: 1,
       title: "Shang-Chi and the Legend of the Ten Rings",
@@ -60,9 +60,86 @@ const defaultFilms: Film[] = [
     },
   ];
 
-// Read all films
-router.get("/", (_req, res) => {
-    return res.json(defaultFilms);
+
+
+
+// Read all films films?minimum-duration=value
+router.get("/", (req, res) => {
+  if (req.query["minimum-duration"] === undefined) {
+    return res.send(films);
+  }
+
+  const minDuration = Number(req.query["minimum-duration"]);
+
+  if (isNaN(minDuration) || minDuration <= 0) {
+    return res.sendStatus(400);
+  }
+
+  const filteredFilms = films.filter((film) => film.duration >= minDuration);
+
+  return res.send(filteredFilms);
+
+});
+
+
+//Filtrer les films par id
+router.get("/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
+  const film = films.find((film) => film.id === id);
+
+  if (film === undefined) {
+    return res.sendStatus(404);
+  }
+
+  return res.send(film);
+});
+
+
+//Créer une nouveau film
+router.post("/", (req, res) => {
+  const body: unknown = req.body;
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !("title" in body) ||
+    !("director" in body) ||
+    !("duration" in body) ||
+
+    typeof body.title !== "string" ||
+    typeof body.director !== "string" ||
+    typeof body.duration !== "number" ||
+    
+    !body.title.trim() ||
+    !body.director.trim() ||
+    body.duration <= 0
+
+  ) {
+    return res.sendStatus(400);
+  }
+
+  const { title, director, duration, budget, description, imageUrl } = body as NewFilm;
+
+  const nextId =
+    films.reduce((maxId, film) => (film.id > maxId ? film.id : maxId), 0) +
+    1;
+
+  const newFilm: Film = {
+    id: nextId,
+    title,
+    director,
+    duration,
+    budget,
+    description,
+    imageUrl,
+  };
+
+  films.push(newFilm);
+  return res.json(newFilm);
 });
 
 export default router;
