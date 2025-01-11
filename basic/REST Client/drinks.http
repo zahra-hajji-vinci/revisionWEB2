@@ -4,7 +4,7 @@
 GET {{baseUrl}}/drinks
 
 ### Read drink by id
-GET {{baseUrl}}/drink/1
+GET {{baseUrl}}/drinks/1
 
 
 ### Read all drinks with a maximum price

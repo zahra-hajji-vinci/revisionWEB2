@@ -1,7 +1,10 @@
 import { Router } from "express";
+import path from "node:path";
 import { Drink, NewDrink } from "../types";
+import { parse, serialize } from "../utils/json";
+const jsonDbPath = path.join(__dirname, "/../data/drinks.json");
 
-const drinks: Drink[] = [
+const defaultDrinks: Drink[] = [
   {
     id: 1,
     title: "Coca-Cola",
@@ -46,40 +49,29 @@ const drinks: Drink[] = [
 
 const router = Router();
 
-
-
-
-// Filtrer les boissons par prix (prix maximum)
 router.get("/", (req, res) => {
-  if (req.query["max-price"] === undefined) {
+  const drinks = parse(jsonDbPath, defaultDrinks);
+  if (!req.query["budget-max"]) {
+    // Cannot call req.query.budget-max as "-" is an operator
     return res.json(drinks);
   }
-
-  const maxPrice = Number(req.query["max-price"]);
-
-  if (isNaN(maxPrice) || maxPrice <= 0) {
-    return res.sendStatus(400);
-  }
-
-  const filteredDrinks = drinks.filter((drink) => drink.price <= maxPrice);
-
-  return res.send(filteredDrinks);
+  const budgetMax = Number(req.query["budget-max"]);
+  const filteredDrinks = drinks.filter((drink) => {
+    return drink.price <= budgetMax;
+  });
+  return res.json(filteredDrinks);
 });
 
-
-
-
-//Filtrer les boissons par id
 router.get("/:id", (req, res) => {
   const id = Number(req.params.id);
+  const drinks = parse(jsonDbPath, defaultDrinks);
   const drink = drinks.find((drink) => drink.id === id);
   if (!drink) {
-    return res.status(404).json({ message: "Drink not found" });
+    return res.sendStatus(404);
   }
   return res.json(drink);
 });
 
-//Créer une nouvelle boisson
 router.post("/", (req, res) => {
   const body: unknown = req.body;
   if (
@@ -95,7 +87,6 @@ router.post("/", (req, res) => {
     typeof body.price !== "number" ||
     !body.title.trim() ||
     !body.image.trim() ||
-     // Trim supprime les espaces blancs des deux côtés d'une chaîne
     body.volume <= 0 ||
     body.price <= 0
   ) {
@@ -103,6 +94,8 @@ router.post("/", (req, res) => {
   }
 
   const { title, image, volume, price } = body as NewDrink;
+
+  const drinks = parse(jsonDbPath, defaultDrinks);
 
   const nextId =
     drinks.reduce((maxId, drink) => (drink.id > maxId ? drink.id : maxId), 0) +
@@ -117,26 +110,25 @@ router.post("/", (req, res) => {
   };
 
   drinks.push(newDrink);
+  serialize(jsonDbPath, drinks);
   return res.json(newDrink);
 });
 
-
-
-// Delete a pizza from the menu based on its id
 router.delete("/:id", (req, res) => {
   const id = Number(req.params.id);
+  const drinks = parse(jsonDbPath, defaultDrinks);
   const index = drinks.findIndex((drink) => drink.id === id);
   if (index === -1) {
     return res.sendStatus(404);
   }
   const deletedElements = drinks.splice(index, 1); // splice() returns an array of the deleted elements
+  serialize(jsonDbPath, drinks);
   return res.json(deletedElements[0]);
 });
 
-
-// Modifier une boisson
 router.patch("/:id", (req, res) => {
   const id = Number(req.params.id);
+  const drinks = parse(jsonDbPath, defaultDrinks);
   const drink = drinks.find((drink) => drink.id === id);
   if (!drink) {
     return res.sendStatus(404);
@@ -173,10 +165,9 @@ router.patch("/:id", (req, res) => {
     drink.price = price;
   }
 
+  serialize(jsonDbPath, drinks);
+
   return res.json(drink);
 });
-
-
-
 
 export default router;
