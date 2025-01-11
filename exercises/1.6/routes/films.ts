@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { Film, NewFilm} from "../types";
 
+
 const router = Router();
 
 const films: Film[] = [
@@ -141,5 +142,130 @@ router.post("/", (req, res) => {
   films.push(newFilm);
   return res.json(newFilm);
 });
+
+
+// Delete a film by id
+router.delete("/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
+  const index = films.findIndex((film) => film.id === id);
+
+  if (index === -1) {
+    return res.sendStatus(404);
+  }
+
+  const deletedFilm = films[index];
+
+  films.splice(index, 1);
+
+  return res.send(deletedFilm);
+});
+
+
+
+// Update on or multiple props of a film
+router.patch("/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
+  const filmToUpdate = films.find((film) => film.id === id);
+
+  if (filmToUpdate === undefined) {
+    return res.sendStatus(404);
+  }
+
+  const body: unknown = req.body;
+
+  if (
+    !body ||
+    typeof body !== "object" ||
+    Object.keys(body).length === 0 ||
+    ("title" in body &&
+      (typeof body.title !== "string" || !body.title.trim())) ||
+    ("director" in body &&
+      (typeof body.director !== "string" || !body.director.trim())) ||
+    ("duration" in body &&
+      (typeof body.duration !== "number" || body.duration <= 0)) ||
+    ("budget" in body &&
+      (typeof body.budget !== "number" || body.budget <= 0)) ||
+    ("description" in body &&
+      (typeof body.description !== "string" || !body.description.trim())) ||
+    ("imageUrl" in body &&
+      (typeof body.imageUrl !== "string" || !body.imageUrl.trim()))
+  ) {
+    return res.sendStatus(400);
+  }
+
+  const updatedFilm = { ...filmToUpdate, ...body };
+
+  films[films.indexOf(filmToUpdate)] = updatedFilm;
+
+  return res.send(updatedFilm);
+});
+
+
+
+// Update a film only if all properties are given or create it if it does not exist and the id is not existant
+router.put("/:id", (req, res) => {
+  const body: unknown = req.body;
+
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !("title" in body) ||
+    !("director" in body) ||
+    !("duration" in body) ||
+    typeof body.title !== "string" ||
+    typeof body.director !== "string" ||
+    typeof body.duration !== "number" ||
+    !body.title.trim() ||
+    !body.director.trim() ||
+    body.duration <= 0 ||
+    ("budget" in body &&
+      (typeof body.budget !== "number" || body.budget <= 0)) ||
+    ("description" in body &&
+      (typeof body.description !== "string" || !body.description.trim())) ||
+    ("imageUrl" in body &&
+      (typeof body.imageUrl !== "string" || !body.imageUrl.trim()))
+  ) {
+    return res.sendStatus(400);
+  }
+
+  const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
+  const indexOfFilmToUpdate = films.findIndex((film) => film.id === id);
+  // Deal with the film creation if it does not exist
+  if (indexOfFilmToUpdate < 0) {
+    const newFilm = body as NewFilm;
+
+    const nextId =
+      films.reduce((acc, film) => (film.id > acc ? film.id : acc), 0) + 1;
+
+    const addedFilm = { id: nextId, ...newFilm };
+
+    films.push(addedFilm);
+
+    return res.json(addedFilm);
+  }
+
+  // Update the film
+  const updatedFilm = { ...films[indexOfFilmToUpdate], ...body } as Film;
+
+  films[indexOfFilmToUpdate] = updatedFilm;
+
+  return res.send(updatedFilm);
+});
+
 
 export default router;
