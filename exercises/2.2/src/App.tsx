@@ -67,5 +67,4 @@ const Cinema = (props: CinemaProps) => (
     </ul>
   </div>
 );
-
 export default App;
