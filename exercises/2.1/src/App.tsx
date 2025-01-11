@@ -1,102 +1,65 @@
-import "./App.css";
-import sound from "./assets/sounds/Infecticide-11-Pizza-Spinoza.mp3";
-import logo from "./assets/images/js-logo.png";
+const App = () => {
+  const pageTitle = "Informations sur les films dans les cinémas";
 
+  const cinema1Name = "UGC DeBrouckère";
+  const cinema1Movie1Title = "Film 1 - DeBrouckère";
+  const cinema1Movie1Director = "Director A";
+  const cinema1Movie2Title = "Film 2 - DeBrouckère";
+  const cinema1Movie2Director = "Director B";
 
+  const cinema2Name = "UGC Toison d'Or";
+  const cinema2Movie1Title = "Film 1 - Toison d'Or";
+  const cinema2Movie1Director = "Director C";
+  const cinema2Movie2Title = "Film 2 - Toison d'Or";
+  const cinema2Movie2Director = "Director D";
 
-interface HeaderProps {
-  title: string;
-  version:number;
-}
-
-const Header = (props: HeaderProps) => {
   return (
-    <header>
-      <h1 className="animate__animated animate__bounce">{props.title}</h1>
-      <h4>Version: {props.version}</h4>
-    </header>
-  );
-};
+    <div>
+      <PageTitle title={pageTitle} />
 
-const Main = () => {
-  return (
-    <main>
-      <p>My HomePage</p>
-      <p>
-        Because we love JS, you can also click on the header to stop / start the
-        music ; )
-      </p>
+      <Cinema
+        name={cinema1Name}
+        movie1Title={cinema1Movie1Title}
+        movie1Director={cinema1Movie1Director}
+        movie2Title={cinema1Movie2Title}
+        movie2Director={cinema1Movie2Director}
+      />
 
-      <audio id="audioPlayer" controls autoPlay>
-        <source src={sound} type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </main>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer>
-      <h1 className="animate__animated animate__bounce animate__delay-2s">
-        But we also love JS
-      </h1>
-      <img src={logo} alt="" />
-    </footer>
-  );
-};
-
-function App() {
-  return (
-    <div className="page">
-      <Header title="We love Pizza" version={0+1}/>
-      <Main />
-      <Footer />
+      <Cinema
+        name={cinema2Name}
+        movie1Title={cinema2Movie1Title}
+        movie1Director={cinema2Movie1Director}
+        movie2Title={cinema2Movie2Title}
+        movie2Director={cinema2Movie2Director}
+      />
     </div>
   );
-}
+};
+
+const PageTitle = (props: { title: string }) => {
+  return <h1>{props.title}</h1>;
+};
+
+const Cinema = (props: {
+  name: string;
+  movie1Title: string;
+  movie1Director: string;
+  movie2Title: string;
+  movie2Director: string;
+}) => (
+  <div>
+    <h2>{props.name}</h2>
+    <ul>
+      <li>
+        <strong>{props.movie1Title}</strong> - Réalisateur :{" "}
+        {props.movie1Director}
+      </li>
+      <li>
+        <strong>{props.movie2Title}</strong> - Réalisateur :{" "}
+        {props.movie2Director}
+      </li>
+    </ul>
+  </div>
+);
 
 export default App;
-
-
-
-
-
-
-
-
-{/*3 composantes React
-  Pour rappel, pour définir un type en TS, 
-  il y a deux principales façons de le faire. 
-  Soit à l'aide de type, soit à l'aide de interface.
-  Dans ce cours, nous avons choisi d'utiliser interface pour définir la structure d'objets.*/}
-
-
-/* sans type
-const Header = () => {
-  return (
-    <header>
-      <h1 className="animate__animated animate__bounce">{}</h1>
-    </header>
-  );
-}; */
-
-/*  le type de retour en JSX.Element
-const Header = (props: HeaderProps): JSX.Element => {
-  return (
-    <header>
-      <h1 className="animate__animated animate__bounce">{props.title}</h1>
-    </header>
-  );
-};
- */
-
-/* inline prop type annotation pour typer props
-const Header = (props: {title:string}) => {
-  return (
-    <header>
-      <h1 className="animate__animated animate__bounce">{props.title}</h1>
-    </header>
-  );
-};
-*/
