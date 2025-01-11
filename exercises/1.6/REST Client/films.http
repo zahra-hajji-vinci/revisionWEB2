@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:3000
+
+### Read all films
+GET {{baseUrl}}/films
+
+### Read all films with a minimum duration
+GET {{baseUrl}}/films/?minimum-duration=120
+
+### Read film by id
+GET {{baseUrl}}/films/1
+
+
+### Add a new film
+POST  {{baseUrl}}/drinks
+Content-Type: application/json
+
+{
+    "title":"Zahra la gentille",
+    "director": "Zahra",
+    "duration": 60,
+    "imageUrl":"https://plus.unsplash.com/premium_photo"
+}
