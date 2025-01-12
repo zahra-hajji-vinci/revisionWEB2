@@ -1,11 +1,6 @@
-html,
-body {
-  height: 100%;
+html,body{
   margin: 0;
   padding: 0;
-}
-
-html {
-  background-image: url(./assets/images/pizza.jpg);
-  background-size: cover;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
 }
