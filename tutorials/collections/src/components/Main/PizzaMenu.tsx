@@ -28,7 +28,7 @@ const pizzas = [
   
   const PizzaMenu = () => {
     return (
-      <table>
+      <table className="pizza-menu">
         <thead>
           <tr>
             <th>Pizza</th>

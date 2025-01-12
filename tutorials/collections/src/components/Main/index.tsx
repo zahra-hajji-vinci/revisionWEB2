@@ -3,6 +3,7 @@
 import sound from '../../assets/sounds/Infecticide-11-Pizza-Spinoza.mp3';
 import './Main.css';
 import PizzaMenu from './PizzaMenu';
+import './PizzaMenu.css';
 
 const Main = () => {
     return (
