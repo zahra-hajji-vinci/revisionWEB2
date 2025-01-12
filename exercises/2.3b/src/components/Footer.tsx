@@ -9,3 +9,16 @@ const Footer = (props: FooterProps) => {
 
 export default Footer;
   
+
+
+/*interface FooterProps {
+    footerText: string;
+  }
+  
+
+const Footer = (props: FooterProps) => {
+    return <h1>{props.footerText}</h1>;
+  };
+
+export default Footer; */
+  
