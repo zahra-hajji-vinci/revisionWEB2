@@ -3,8 +3,29 @@ import DrinkCard from "./DrinkCard";
 import DrinkMenu from "./DrinkMenu";
 import "./Main.css";
 import PizzaMenu from "./PizzaMenu";
+import { useState, SyntheticEvent } from "react";
 
 const Main = () => {
+  const [pizza, setPizza] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    console.log("submit:", pizza, description);
+  };
+
+  const handlePizzaChange = (e: SyntheticEvent) => {
+    const pizzaInput = e.target as HTMLInputElement;
+    console.log("change in pizzaInput:", pizzaInput.value);
+    setPizza(pizzaInput.value);
+  };
+
+  const handleDescriptionChange = (e: SyntheticEvent) => {
+    const descriptionInput = e.target as HTMLInputElement;
+    console.log("change in descriptionInput:", descriptionInput.value);
+    setDescription(descriptionInput.value);
+  };
+
   return (
     <main>
       <p>My HomePage</p>
@@ -17,6 +38,31 @@ const Main = () => {
         Your browser does not support the audio element.
       </audio>
       <PizzaMenu />
+      <div>
+        <br />
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="pizza">Pizza</label>
+          <input
+            value={pizza}
+            type="text"
+            id="pizza"
+            name="pizza"
+            onChange={handlePizzaChange}
+            required
+          />
+          <label htmlFor="description">Description</label>
+          <input
+            value={description}
+            type="text"
+            id="description"
+            name="description"
+            onChange={handleDescriptionChange}
+            required
+          />
+          <button type="submit">Ajouter</button>
+        </form>
+      </div>
+
 
       <DrinkMenu title="Notre Menu de Boissons">
         <DrinkCard
@@ -46,3 +92,4 @@ const Main = () => {
 };
 
 export default Main;
+
