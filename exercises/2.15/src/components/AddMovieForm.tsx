@@ -1,28 +1,29 @@
 import { SyntheticEvent, useState } from "react";
-import { Movie } from "../types";
+import { NewMovie } from "../types";
 import "./AddMovieForm.css";
 
 interface AddMovieFormProps {
-  onMovieAdded: (movie: Movie) => void;
+  onMovieAdded: (movie: NewMovie) => void;
 }
 
 const AddMovieForm = ({ onMovieAdded }: AddMovieFormProps) => {
   const [title, setTitle] = useState("");
   const [director, setDirector] = useState("");
-  const [duration, setDuration] = useState(0);
-  const [imageUrl, setImageUrl] = useState("");
-  const [description, setDescription] = useState("");
-  const [budget, setBudget] = useState(0);
+  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const [description, setDescription] = useState<string | undefined>(undefined);
+  const [budget, setBudget] = useState<number | undefined>(undefined);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    onMovieAdded({ title, director, duration, imageUrl, description, budget });
-    setTitle("");
-    setDirector("");
-    setDuration(0);
-    setImageUrl("");
-    setDescription("");
-    setBudget(0);
+    onMovieAdded({
+      title,
+      director,
+      duration: (duration === undefined || isNaN(duration)) ? 0 : duration,
+      imageUrl: imageUrl === "" ? undefined : imageUrl,
+      description: description== "" ? undefined : description,
+      budget: (budget === undefined || isNaN(budget)) ? undefined : budget,
+    });
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -48,7 +49,7 @@ const AddMovieForm = ({ onMovieAdded }: AddMovieFormProps) => {
         <label>Durée :</label>
         <input
           type="number"
-          value={duration}
+          value={(duration === undefined || isNaN(duration)) ? "" : duration}
           onChange={(e) => setDuration(parseInt(e.target.value))}
           required
         />
@@ -57,7 +58,7 @@ const AddMovieForm = ({ onMovieAdded }: AddMovieFormProps) => {
         <label>URL de l'image :</label>
         <input
           type="text"
-          value={imageUrl}
+          value={imageUrl !== undefined ? imageUrl : ""}
           onChange={(e) => setImageUrl(e.target.value)}
         />
       </div>
@@ -72,7 +73,7 @@ const AddMovieForm = ({ onMovieAdded }: AddMovieFormProps) => {
         <label>Budget :</label>
         <input
           type="number"
-          value={budget}
+          value={(budget === undefined || isNaN(budget)) ? "" : budget}
           onChange={(e) => setBudget(parseInt(e.target.value))}
         />
       </div>
