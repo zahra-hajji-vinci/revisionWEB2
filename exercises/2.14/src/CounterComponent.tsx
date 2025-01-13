@@ -14,7 +14,7 @@ const CounterComponent = () => {
     }, []); // Le tableau vide [] signifie que cet effet s'exécute une seule fois lors du montage
 
     useEffect(() => {
-        if (count >= 10) {
+        if (count >= 5) {
             window.location.reload();
         }
     }, [count]);
