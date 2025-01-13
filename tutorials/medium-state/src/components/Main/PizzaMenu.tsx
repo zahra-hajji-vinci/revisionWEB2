@@ -1,32 +1,12 @@
-const pizzas = [
-    {
-      id: 1,
-      title: "4 fromages",
-      content: "Gruyère, Sérac, Appenzel, Gorgonzola, Tomates",
-    },
-    {
-      id: 2,
-      title: "Vegan",
-      content: "Tomates, Courgettes, Oignons, Aubergines, Poivrons",
-    },
-    {
-      id: 3,
-      title: "Vegetarian",
-      content: "Mozarella, Tomates, Oignons, Poivrons, Champignons, Olives",
-    },
-    {
-      id: 4,
-      title: "Alpage",
-      content: "Gruyère, Mozarella, Lardons, Tomates",
-    },
-    {
-      id: 5,
-      title: "Diable",
-      content: "Tomates, Mozarella, Chorizo piquant, Jalapenos",
-    },
-  ];
+import { Pizza } from "../../types";
+
+
+  interface PizzaMenuProps {
+    pizzas: Pizza[];
   
-  const PizzaMenu = () => {
+  }
+  
+  const PizzaMenu = ({ pizzas }: PizzaMenuProps) => {
     return (
       <table className="pizza-menu">
         <thead>
@@ -37,7 +17,7 @@ const pizzas = [
         </thead>
         <tbody>
           {pizzas.map((pizza) => (
-            <tr>
+            <tr key={pizza.id}>
               <td>{pizza.title}</td>
               <td>{pizza.content}</td>
             </tr>
