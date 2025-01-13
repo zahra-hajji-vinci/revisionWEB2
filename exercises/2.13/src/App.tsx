@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CounterComponent from "./CounterComponent";
 
 interface Joke {
   joke: string;
@@ -35,6 +36,7 @@ const App = () => {
       <p>
         <cite>https://v2.jokeapi.dev/joke.category</cite>
       </p>
+      <CounterComponent />
     </div>
   );
 };
